@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Algorithms & Data Structures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Custom scrollbar for content area */
+        #content-display::-webkit-scrollbar {
+            width: 8px;
+        }
+        #content-display::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        #content-display::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        #content-display::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <header class="bg-gradient-to-r from-blue-600 to-purple-700 text-white p-6 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <h1 class="text-3xl font-bold mb-2 md:mb-0">Python Algorithms & Data Structures</h1>
+            <p class="text-lg opacity-90">Explore fundamental concepts with practical examples.</p>
+        </div>
+    </header>
+
+    <main class="flex flex-1 container mx-auto my-6 p-4 bg-white rounded-xl shadow-lg overflow-hidden">
+        <aside class="w-full md:w-1/4 lg:w-1/5 bg-gray-50 p-4 rounded-lg shadow-inner mr-4 overflow-y-auto max-h-[calc(100vh-180px)]">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Topics</h2>
+            <nav>
+                <ul id="topic-list">
+                    </ul>
+            </nav>
+        </aside>
+
+        <section id="content-display" class="flex-1 p-6 bg-white rounded-lg shadow-md overflow-y-auto max-h-[calc(100vh-180px)]">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4" id="content-title">Welcome!</h2>
+            <div id="content-body" class="prose max-w-none text-gray-700 leading-relaxed">
+                <p>Select a topic from the left sidebar to learn about Python algorithms and data structures.</p>
+                <p>This application uses the Gemini API to generate explanations and code examples on the fly.</p>
+                <p>Happy learning!</p>
+            </div>
+            <div id="loading-indicator" class="hidden mt-8 text-center text-blue-500 font-semibold">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
+                Loading content...
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center mt-auto shadow-inner">
+        <p>&copy; 2025 Python Algo & DS App. Powered by Gemini API.</p>
+    </footer>
+
+    <script>
+        // JavaScript for dynamic content loading and LLM integration
+        document.addEventListener('DOMContentLoaded', () => {
+            const topicList = document.getElementById('topic-list');
+            const contentTitle = document.getElementById('content-title');
+            const contentBody = document.getElementById('content-body');
+            const loadingIndicator = document.getElementById('loading-indicator');
+
+            // Define the topics available in the application
+            const topics = [
+                { id: 'arrays', name: 'Arrays (Lists)' },
+                { id: 'linked-lists', name: 'Linked Lists' },
+                { id: 'stacks', name: 'Stacks' },
+                { id: 'queues', name: 'Queues' },
+                { id: 'hash-tables', name: 'Hash Tables' },
+                { id: 'binary-search', name: 'Binary Search' },
+                { id: 'bubble-sort', name: 'Bubble Sort' },
+                { id: 'quick-sort', name: 'Quick Sort' },
+                { id: 'merge-sort', name: 'Merge Sort' },
+                { id: 'tree-traversals', name: 'Tree Traversals' },
+                { id: 'graphs', name: 'Graphs' },
+                { id: 'recursion', name: 'Recursion' }
+            ];
+
+            // Function to render topic links in the sidebar
+            function renderTopicLinks() {
+                topicList.innerHTML = ''; // Clear existing list
+                topics.forEach(topic => {
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = `#${topic.id}`;
+                    link.textContent = topic.name;
+                    link.classList.add(
+                        'block', 'py-2', 'px-3', 'rounded-md', 'text-gray-700', 'hover:bg-blue-100',
+                        'hover:text-blue-700', 'transition-colors', 'duration-200', 'ease-in-out',
+                        'font-medium'
+                    );
+                    link.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        loadTopicContent(topic.id, topic.name);
+                        // Remove active class from previous and add to current
+                        document.querySelectorAll('#topic-list a').forEach(a => a.classList.remove('bg-blue-200', 'text-blue-800'));
+                        link.classList.add('bg-blue-200', 'text-blue-800');
+                    });
+                    listItem.appendChild(link);
+                    topicList.appendChild(listItem);
+                });
+            }
+
+            // Function to load content for a selected topic using the Gemini API
+            async function loadTopicContent(topicId, topicName) {
+                contentTitle.textContent = topicName;
+                contentBody.innerHTML = ''; // Clear previous content
+                loadingIndicator.classList.remove('hidden'); // Show loading indicator
+
+                // Construct the prompt for the LLM
+                const prompt = `Provide a detailed explanation of "${topicName}" in Python, including its definition, how it works, its time/space complexity, and a clear, well-commented Python code example. Format the explanation as Markdown and the code as a Python code block.`;
+
+                console.log(`Sending prompt to Gemini API for "${topicName}":\n"${prompt}"`); // Log the prompt
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                // Define the expected JSON schema for the LLM response
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "explanation": { "type": "STRING" },
+                                "code": { "type": "STRING" }
+                            },
+                            "propertyOrdering": ["explanation", "code"]
+                        }
+                    }
+                };
+
+                const apiKey = "AIzaSyAT9zf0eW9o9dZYZdZtl94A-bLqyVlqgN4"; // API key will be provided by the Canvas environment
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const jsonString = result.candidates[0].content.parts[0].text;
+                        const parsedContent = JSON.parse(jsonString);
+
+                        // Render the explanation (Markdown will be rendered by the browser's prose styling)
+                        contentBody.innerHTML = `
+                            <div class="mb-6">
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Explanation</h3>
+                                ${parsedContent.explanation.replace(/\n/g, '<br>')}
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Python Code Example</h3>
+                                <pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto text-sm"><code>${parsedContent.code.replace(/```python\n|```/g, '').trim()}</code></pre>
+                            </div>
+                        `;
+                    } else {
+                        contentBody.innerHTML = '<p class="text-red-500">Failed to load content. Please try again.</p>';
+                        console.error('LLM response structure unexpected:', result);
+                    }
+                } catch (error) {
+                    contentBody.innerHTML = `<p class="text-red-500">Error fetching content: ${error.message}. Please check your network connection or try again later.</p>`;
+                    console.error('Fetch error:', error);
+                } finally {
+                    loadingIndicator.classList.add('hidden'); // Hide loading indicator
+                }
+            }
+
+            // Initial rendering of topic links
+            renderTopicLinks();
+
+            // Optionally, load a default topic on page load
+            if (topics.length > 0) {
+                // Simulate a click on the first topic to load its content
+                const firstTopicLink = document.querySelector('#topic-list a');
+                if (firstTopicLink) {
+                    firstTopicLink.click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
