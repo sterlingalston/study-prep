@@ -173,6 +173,10 @@
             opacity: 1;
         }
         
+        .copy-btn.copied {
+            background: #48bb78;
+        }
+        
         .table-container {
             overflow-x: auto;
             margin: 1rem 0;
@@ -461,4 +465,278 @@ df <span class="token operator">=</span> df<span class="token punctuation">.</sp
                 <div class="code-block">
                     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                     <code><pre><span class="token comment"># Filter on >, <, >=, <=, == condition</span>
-df_filtered <span class="token operator">=</span> df<span class="token punctuation">.</span><span class="token builtin">filter
+df_filtered <span class="token operator">=</span> df<span class="token punctuation">.</span><span class="token builtin">filter</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>age <span class="token operator">></span> <span class="token number">30</span><span class="token punctuation">)</span>
+df_filtered <span class="token operator">=</span> df<span class="token punctuation">.</span><span class="token builtin">filter</span><span class="token punctuation">(</span>df<span class="token punctuation">[</span><span class="token string">'age'</span><span class="token punctuation">]</span> <span class="token operator">></span> <span class="token number">30</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Using col() function</span>
+<span class="token keyword">from</span> pyspark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>functions <span class="token keyword">import</span> col
+df_filtered <span class="token operator">=</span> df<span class="token punctuation">.</span><span class="token builtin">filter</span><span class="token punctuation">(</span>col<span class="token punctuation">(</span><span class="token string">"age"</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">30</span><span class="token punctuation">)</span></pre></code>
+                </div>
+                
+                <h3 id="filter-with-multiple-conditions">Filter with Multiple Conditions</h3>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <code><pre><span class="token comment"># Multiple conditions require parentheses around each condition</span>
+
+<span class="token comment"># AND condition ( & )</span>
+df_filtered <span class="token operator">=</span> df<span class="token punctuation">.</span><span class="token builtin">filter</span><span class="token punctuation">(</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>age <span class="token operator">></span> <span class="token number">25</span><span class="token punctuation">)</span> <span class="token operator">&</span> <span class="token punctuation">(</span>df<span class="token punctuation">.</span>department <span class="token operator">==</span> <span class="token string">"Engineering"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># OR condition ( | )</span>
+df_filtered <span class="token operator">=</span> df<span class="token punctuation">.</span><span class="token builtin">filter</span><span class="token punctuation">(</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>age <span class="token operator"><</span> <span class="token number">30</span><span class="token punctuation">)</span> <span class="token operator">|</span> <span class="token punctuation">(</span>df<span class="token punctuation">.</span>department <span class="token operator">==</span> <span class="token string">"Finance"</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></code>
+                </div>
+                
+                <h3 id="string-filters">String Filters</h3>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <code><pre><span class="token comment"># Filter rows where department equals 'Marketing'</span>
+df_filtered <span class="token operator">=</span> df<span class="token punctuation">.</span><span class="token builtin">filter</span><span class="token punctuation">(</span>df<span class="token punctuation">.</span>department <span class="token operator">==</span> <span class="token string">"Marketing"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Contains a substring</span>
+df_filtered <span class="token operator">=</span> df<span class="token punctuation">.</span><span class="token builtin">filter</span><span class="token punctuation">(</span>col<span class="token punctuation">(</span><span class="token string">"department"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>contains<span class="token punctuation">(</span><span class="token string">"Engineer"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Filter rows where the name starts with 'A'</span>
+df<span class="token punctuation">.</span><span class="token builtin">filter</span><span class="token punctuation">(</span>col<span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>startswith<span class="token punctuation">(</span><span class="token string">"A"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></code>
+                </div>
+                
+                <h2 id="grouping">Grouping</h2>
+                
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <code><pre><span class="token keyword">from</span> pyspark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>functions <span class="token keyword">import</span> count<span class="token punctuation">,</span> <span class="token builtin">sum</span><span class="token punctuation">,</span> avg<span class="token punctuation">,</span> <span class="token builtin">min</span><span class="token punctuation">,</span> <span class="token builtin">max</span></pre></code>
+                </div>
+                
+                <h3 id="basic-aggregations-without-grouping">Basic Aggregations without Grouping</h3>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <code><pre><span class="token comment"># Count rows</span>
+df<span class="token punctuation">.</span>count<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Sum</span>
+df<span class="token punctuation">.</span>select<span class="token punctuation">(</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token string">"Salary"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Multiple Aggregations</span>
+df<span class="token punctuation">.</span>select<span class="token punctuation">(</span><span class="token builtin">min</span><span class="token punctuation">(</span><span class="token string">"Salary"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token builtin">max</span><span class="token punctuation">(</span><span class="token string">"Salary"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></code>
+                </div>
+
+                <h3 id="aggregations-with-grouping">Aggregations with Grouping</h3>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <code><pre><span class="token comment"># Group by a single column</span>
+df<span class="token punctuation">.</span>groupBy<span class="token punctuation">(</span><span class="token string">"Department"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token string">"Salary"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Group by with multiple aggregations</span>
+df<span class="token punctuation">.</span>groupBy<span class="token punctuation">(</span><span class="token string">"Department"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>agg<span class="token punctuation">(</span>
+    count<span class="token punctuation">(</span><span class="token string">"Employee"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>alias<span class="token punctuation">(</span><span class="token string">"Employee_Count"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    avg<span class="token punctuation">(</span><span class="token string">"Salary"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>alias<span class="token punctuation">(</span><span class="token string">"Average_Salary"</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span></pre></code>
+                </div>
+                
+                <h2 id="joins">Joins</h2>
+                
+                <h3 id="join-types">Join Types</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Join Type</th>
+                                <th>Syntax</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>inner</strong></td>
+                                <td><code>how="inner"</code></td>
+                                <td>Returns matching rows from both DataFrames</td>
+                            </tr>
+                            <tr>
+                                <td><strong>outer</strong> (full)</td>
+                                <td><code>how="outer"</code></td>
+                                <td>Returns all rows, with NULL where no match is found</td>
+                            </tr>
+                            <tr>
+                                <td><strong>left</strong></td>
+                                <td><code>how="left"</code></td>
+                                <td>Returns all rows from the left DataFrame</td>
+                            </tr>
+                            <tr>
+                                <td><strong>right</strong></td>
+                                <td><code>how="right"</code></td>
+                                <td>Returns all rows from the right DataFrame</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h3 id="basic-syntax">Basic Join Syntax</h3>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <code><pre><span class="token comment"># Basic Join</span>
+df1<span class="token punctuation">.</span>join<span class="token punctuation">(</span>df2<span class="token punctuation">,</span> on<span class="token operator">=</span><span class="token string">"id"</span><span class="token punctuation">,</span> how<span class="token operator">=</span><span class="token string">"inner"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Join on Multiple Columns</span>
+df1<span class="token punctuation">.</span>join<span class="token punctuation">(</span>df2<span class="token punctuation">,</span> on<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">"col1"</span><span class="token punctuation">,</span> <span class="token string">"col2"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> how<span class="token operator">=</span><span class="token string">"left"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Conditional Join</span>
+df1<span class="token punctuation">.</span>join<span class="token punctuation">(</span>df2<span class="token punctuation">,</span> <span class="token punctuation">(</span>df1<span class="token punctuation">.</span><span class="token builtin">id</span> <span class="token operator">==</span> df2<span class="token punctuation">.</span><span class="token builtin">id</span><span class="token punctuation">)</span> <span class="token operator">&</span> <span class="token punctuation">(</span>df2<span class="token punctuation">.</span>city <span class="token operator">==</span> <span class="token string">"New York"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> how<span class="token operator">=</span><span class="token string">"inner"</span><span class="token punctuation">)</span></pre></code>
+                </div>
+                
+                <h2 id="date-and-time-functions">Date and Time Functions</h2>
+                
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <code><pre><span class="token keyword">from</span> pyspark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>functions <span class="token keyword">import</span> to_date<span class="token punctuation">,</span> date_format<span class="token punctuation">,</span> current_date
+
+<span class="token comment"># Convert string to date</span>
+df <span class="token operator">=</span> df<span class="token punctuation">.</span>withColumn<span class="token punctuation">(</span><span class="token string">"date_parsed"</span><span class="token punctuation">,</span> to_date<span class="token punctuation">(</span><span class="token string">"date_str"</span><span class="token punctuation">,</span> <span class="token string">"yyyy-MM-dd"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Format date</span>
+df <span class="token operator">=</span> df<span class="token punctuation">.</span>withColumn<span class="token punctuation">(</span><span class="token string">"formatted_date"</span><span class="token punctuation">,</span> date_format<span class="token punctuation">(</span><span class="token string">"date"</span><span class="token punctuation">,</span> <span class="token string">"dd-MMM-yyyy"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Current date</span>
+df <span class="token operator">=</span> df<span class="token punctuation">.</span>withColumn<span class="token punctuation">(</span><span class="token string">"current_date"</span><span class="token punctuation">,</span> current_date<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></code>
+                </div>
+                
+                <h2 id="string-functions">String Functions</h2>
+                
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <code><pre><span class="token keyword">from</span> pyspark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>functions <span class="token keyword">import</span> concat<span class="token punctuation">,</span> upper<span class="token punctuation">,</span> lower<span class="token punctuation">,</span> trim<span class="token punctuation">,</span> split
+
+<span class="token comment"># Concatenate strings</span>
+df <span class="token operator">=</span> df<span class="token punctuation">.</span>withColumn<span class="token punctuation">(</span><span class="token string">"full_name"</span><span class="token punctuation">,</span> concat<span class="token punctuation">(</span>col<span class="token punctuation">(</span><span class="token string">"first_name"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> lit<span class="token punctuation">(</span><span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">,</span> col<span class="token punctuation">(</span><span class="token string">"last_name"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Convert to uppercase/lowercase</span>
+df <span class="token operator">=</span> df<span class="token punctuation">.</span>withColumn<span class="token punctuation">(</span><span class="token string">"upper_name"</span><span class="token punctuation">,</span> upper<span class="token punctuation">(</span>col<span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+df <span class="token operator">=</span> df<span class="token punctuation">.</span>withColumn<span class="token punctuation">(</span><span class="token string">"lower_name"</span><span class="token punctuation">,</span> lower<span class="token punctuation">(</span>col<span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Split strings</span>
+df <span class="token operator">=</span> df<span class="token punctuation">.</span>withColumn<span class="token punctuation">(</span><span class="token string">"name_parts"</span><span class="token punctuation">,</span> split<span class="token punctuation">(</span>col<span class="token punctuation">(</span><span class="token string">"full_name"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></code>
+                </div>
+                
+                <h2 id="window-functions">Window Functions</h2>
+                
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <code><pre><span class="token keyword">from</span> pyspark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>window <span class="token keyword">import</span> Window
+<span class="token keyword">from</span> pyspark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>functions <span class="token keyword">import</span> row_number<span class="token punctuation">,</span> rank<span class="token punctuation">,</span> lag<span class="token punctuation">,</span> lead
+
+<span class="token comment"># Define window specification</span>
+window_spec <span class="token operator">=</span> Window<span class="token punctuation">.</span>partitionBy<span class="token punctuation">(</span><span class="token string">"department"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>orderBy<span class="token punctuation">(</span>col<span class="token punctuation">(</span><span class="token string">"salary"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>desc<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Apply window functions</span>
+df <span class="token operator">=</span> df<span class="token punctuation">.</span>withColumn<span class="token punctuation">(</span><span class="token string">"row_number"</span><span class="token punctuation">,</span> row_number<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>over<span class="token punctuation">(</span>window_spec<span class="token punctuation">)</span><span class="token punctuation">)</span>
+df <span class="token operator">=</span> df<span class="token punctuation">.</span>withColumn<span class="token punctuation">(</span><span class="token string">"rank"</span><span class="token punctuation">,</span> rank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>over<span class="token punctuation">(</span>window_spec<span class="token punctuation">)</span><span class="token punctuation">)</span>
+df <span class="token operator">=</span> df<span class="token punctuation">.</span>withColumn<span class="token punctuation">(</span><span class="token string">"previous_salary"</span><span class="token punctuation">,</span> lag<span class="token punctuation">(</span><span class="token string">"salary"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>over<span class="token punctuation">(</span>window_spec<span class="token punctuation">)</span><span class="token punctuation">)</span></pre></code>
+                </div>
+                
+                <h2 id="running-sql-queries">Running SQL Queries</h2>
+                
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <code><pre><span class="token comment"># Create a temporary SQL table from a DataFrame</span>
+df<span class="token punctuation">.</span>createOrReplaceTempView<span class="token punctuation">(</span><span class="token string">"employees"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Run SQL queries</span>
+df_sql <span class="token operator">=</span> spark<span class="token punctuation">.</span>sql<span class="token punctuation">(</span><span class="token string">"SELECT * FROM employees WHERE salary > 50000"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Aggregations with SQL</span>
+df_sql <span class="token operator">=</span> spark<span class="token punctuation">.</span>sql<span class="token punctuation">(</span><span class="token string">"SELECT department, AVG(salary) AS avg_salary FROM employees GROUP BY department"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Using CASE WHEN</span>
+df_sql <span class="token operator">=</span> spark<span class="token punctuation">.</span>sql<span class="token punctuation">(</span><span class="token string">"""
+    SELECT name, salary,
+    CASE 
+        WHEN salary > 50000 THEN 'High'
+        ELSE 'Low'
+    END AS salary_category
+    FROM employees
+"""</span><span class="token punctuation">)</span></pre></code>
+                </div>
+                
+            </main>
+        </div>
+    </div>
+    
+    <script>
+        function copyCode(button) {
+            // Find the code block within the same parent
+            const codeBlock = button.parentElement.querySelector('code pre');
+            
+            if (!codeBlock) {
+                console.error('Code block not found');
+                return;
+            }
+            
+            // Get the text content, removing HTML tags
+            let codeText = codeBlock.textContent || codeBlock.innerText;
+            
+            // Use the modern Clipboard API if available
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(codeText).then(() => {
+                    showCopySuccess(button);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                    fallbackCopyTextToClipboard(codeText, button);
+                });
+            } else {
+                // Fallback for older browsers or non-HTTPS contexts
+                fallbackCopyTextToClipboard(codeText, button);
+            }
+        }
+        
+        function fallbackCopyTextToClipboard(text, button) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            // Avoid scrolling to bottom
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopySuccess(button);
+                } else {
+                    console.error('Fallback: Oops, unable to copy');
+                }
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        function showCopySuccess(button) {
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            button.classList.add('copied');
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('copied');
+            }, 2000);
+        }
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
