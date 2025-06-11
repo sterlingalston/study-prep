@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Scenario-Based Study Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .study-plan {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab:hover {
+            background: #5a6fd8;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scenario {
+            background: #f8f9ff;
+            border-left: 5px solid #667eea;
+            margin: 25px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .scenario-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .scenario-header:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6b4396);
+        }
+
+        .scenario-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .difficulty {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .difficulty.easy { background: #d4edda; color: #155724; }
+        .difficulty.medium { background: #fff3cd; color: #856404; }
+
+        .scenario-content {
+            padding: 25px;
+            display: none;
+        }
+
+        .scenario-content.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 1000px; }
+        }
+
+        .problem-statement {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .schema {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-line;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .solution {
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .solution-header {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .solution-content {
+            padding: 20px;
+            display: none;
+        }
+
+        .solution-content.active {
+            display: block;
+        }
+
+        .sql-code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 1px solid #333;
+            white-space: pre;
+        }
+
+        .explanation {
+            background: #fff9c4;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .header h1 { font-size: 2rem; }
+            .study-plan { padding: 20px; }
+            .nav-tabs { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all nav tabs
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+            
+            // Add active class to clicked nav tab
+            const clickedTab = event.target;
+            clickedTab.classList.add('active');
+        }
+
+        function toggleScenario(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.toggle-icon');
+            
+            content.classList.toggle('active');
+            icon.classList.toggle('rotated');
+        }
+
+        function toggleSolution(element) {
+            const content = element.nextElementSibling;
+            const isActive = content.classList.contains('active');
+            
+            content.classList.toggle('active');
+            element.innerHTML = isActive ? '<span>Show Solution</span>' : '<span>Hide Solution</span>';
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up initial state
+            showTab('beginner');
+        });
+    </script>
+
+    <div class="container">
+        <div class="header">
+            <h1>SQL Mastery Study Plan</h1>
+            <p>Real-World Data Operations, Finance, Economics & Healthcare Scenarios</p>
+        </div>
+
+        <div class="study-plan">
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('beginner')">Beginner</button>
+                <button class="nav-tab" onclick="showTab('intermediate')">Intermediate</button>
+            </div>
+
+            <div id="beginner" class="tab-content active">
+                <h2 style="color: #667eea; margin-bottom: 20px;">Beginner Level (Weeks 1-2)</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 25%"></div>
+                </div>
+
+                <div class="scenario">
+                    <div class="scenario-header" onclick="toggleScenario(this)">
+                        <span class="scenario-title">Healthcare Patient Records Analysis</span>
+                        <div>
+                            <span class="difficulty easy">Easy</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                    </div>
+                    <div class="scenario-content">
+                        <div class="problem-statement">
+                            <strong>Scenario:</strong> A hospital needs to analyze patient admission records to understand demographics, treatment patterns, and resource allocation for their quality improvement program.
+                        </div>
+                        
+                        <div class="schema">
+<strong>Table: patient_admissions</strong>
+patient_id (INT, PRIMARY KEY)
+first_name (VARCHAR)
+last_name (VARCHAR)
+age (INT)
+gender (VARCHAR)
+admission_date (DATE)
+discharge_date (DATE)
+primary_diagnosis (VARCHAR)
+department (VARCHAR)
+insurance_type (VARCHAR)
+total_charges (DECIMAL)
+
+Sample Data:
+101, 'John', 'Smith', 45, 'M', '2024-01-15', '2024-01-18', 'Pneumonia', 'Internal Medicine', 'Medicare', 12500.00
+102, 'Sarah', 'Johnson', 32, 'F', '2024-01-16', '2024-01-20', 'Appendicitis', 'Surgery', 'Private', 18750.00
+103, 'Robert', 'Brown', 67, 'M', '2024-01-17', '2024-01-25', 'Heart Attack', 'Cardiology', 'Medicare', 45000.00
+                        </div>
+
+                        <p><strong>Question 1:</strong> Find all patients admitted to the Cardiology department with Medicare insurance.</p>
+                        
+                        <div class="solution">
+                            <div class="solution-header" onclick="toggleSolution(this)">
+                                <span>Show Solution</span>
+                            </div>
+                            <div class="solution-content">
+                                <div class="sql-code">SELECT 
+    patient_id,
+    first_name,
+    last_name,
+    age,
+    primary_diagnosis,
+    admission_date,
+    total_charges
+FROM 
+    patient_admissions 
+WHERE 
+    department = 'Cardiology' 
+    AND insurance_type = 'Medicare'
+ORDER BY 
+    admission_date DESC;</div>
+                                <div class="explanation">
+                                    <strong>Explanation:</strong> This query filters patients using multiple conditions with AND operator. We select specific columns for readability and order by admission date to see most recent cases first.
+                                </div>
+                            </div>
+                        </div>
+
+                        <p><strong>Question 2:</strong> Calculate the length of stay for each patient and identify those with stays longer than 5 days.</p>
+                        
+                        <div class="solution">
+                            <div class="solution-header" onclick="toggleSolution(this)">
+                                <span>Show Solution</span>
+                            </div>
+                            <div class="solution-content">
+                                <div class="sql-code">SELECT 
+    patient_id,
+    CONCAT(first_name, ' ', last_name) AS patient_name,
+    primary_diagnosis,
+    admission_date,
+    discharge_date,
+    DATEDIFF(discharge_date, admission_date) AS length_of_stay,
+    CASE 
+        WHEN DATEDIFF(discharge_date, admission_date) <= 3 THEN 'Short Stay'
+        WHEN DATEDIFF(discharge_date, admission_date) <= 7 THEN 'Medium Stay'
+        ELSE 'Extended Stay'
+    END AS stay_category
+FROM 
+    patient_admissions
+WHERE 
+    DATEDIFF(discharge_date, admission_date) > 5
+ORDER BY 
+    length_of_stay DESC;</div>
+                                <div class="explanation">
+                                    <strong>Explanation:</strong> DATEDIFF calculates days between dates. CASE statement categorizes stay lengths. This helps identify patients requiring extended care and potential discharge planning issues.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scenario">
+                    <div class="scenario-header" onclick="toggleScenario(this)">
+                        <span class="scenario-title">Financial Transaction Monitoring</span>
+                        <div>
+                            <span class="difficulty easy">Easy</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                    </div>
+                    <div class="scenario-content">
+                        <div class="problem-statement">
+                            <strong>Scenario:</strong> A credit union needs to monitor daily transactions to identify unusual patterns, large transactions, and ensure compliance with financial regulations.
+                        </div>
+                        
+                        <div class="schema">
+<strong>Table: daily_transactions</strong>
+transaction_id (INT, PRIMARY KEY)
+account_number (VARCHAR)
+transaction_date (DATE)
+transaction_type (VARCHAR) -- 'DEPOSIT', 'WITHDRAWAL', 'TRANSFER'
+amount (DECIMAL)
+merchant_category (VARCHAR)
+location (VARCHAR)
+is_international (BOOLEAN)
+
+Sample Data:
+1001, 'ACC-12345', '2024-01-15', 'WITHDRAWAL', 500.00, 'ATM', 'Seattle, WA', FALSE
+1002, 'ACC-67890', '2024-01-15', 'DEPOSIT', 2500.00, 'PAYROLL', 'Seattle, WA', FALSE
+1003, 'ACC-12345', '2024-01-16', 'WITHDRAWAL', 15000.00, 'WIRE_TRANSFER', 'London, UK', TRUE
+                        </div>
+
+                        <p><strong>Question:</strong> Identify potentially suspicious transactions (over $10,000 or international withdrawals) and calculate daily transaction summaries.</p>
+                        
+                        <div class="solution">
+                            <div class="solution-header" onclick="toggleSolution(this)">
+                                <span>Show Solution</span>
+                            </div>
+                            <div class="solution-content">
+                                <div class="sql-code">SELECT 
+    transaction_id,
+    account_number,
+    transaction_date,
+    transaction_type,
+    amount,
+    merchant_category,
+    location,
+    is_international,
+    CASE 
+        WHEN amount > 10000 AND is_international = TRUE 
+            THEN 'HIGH RISK - Large International'
+        WHEN amount > 10000 
+            THEN 'MEDIUM RISK - Large Domestic'
+        WHEN is_international = TRUE AND transaction_type = 'WITHDRAWAL' 
+            THEN 'MEDIUM RISK - International Withdrawal'
+        ELSE 'LOW RISK'
+    END AS risk_level,
+    CASE 
+        WHEN amount > 10000 
+            THEN 'CTR Required'  -- Currency Transaction Report
+        WHEN is_international = TRUE 
+            THEN 'Review Required'
+        ELSE 'Standard Processing'
+    END AS compliance_action
+FROM 
+    daily_transactions
+WHERE 
+    amount > 5000 
+    OR is_international = TRUE
+ORDER BY 
+    amount DESC, 
+    transaction_date DESC;</div>
+                                <div class="explanation">
+                                    <strong>Explanation:</strong> This query implements basic AML (Anti-Money Laundering) screening by flagging large or international transactions. The CASE statements create risk categories and compliance requirements based on transaction characteristics.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scenario">
+                    <div class="scenario-header" onclick="toggleScenario(this)">
+                        <span class="scenario-title">E-commerce Customer Analysis</span>
+                        <div>
+                            <span class="difficulty easy">Easy</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                    </div>
+                    <div class="scenario-content">
+                        <div class="problem-statement">
+                            <strong>Scenario:</strong> An online retailer wants to analyze customer purchasing behavior to identify high-value customers and understand shopping patterns for their marketing campaigns.
+                        </div>
+                        
+                        <div class="schema">
+<strong>Table: customer_orders</strong>
+order_id (INT, PRIMARY KEY)
+customer_id (INT)
+customer_name (VARCHAR)
+order_date (DATE)
+product_category (VARCHAR)
+quantity (INT)
+unit_price (DECIMAL)
+shipping_cost (DECIMAL)
+customer_tier (VARCHAR) -- 'Bronze', 'Silver', 'Gold', 'Platinum'
+
+Sample Data:
+1001, 201, 'Alice Johnson', '2024-01-15', 'Electronics', 1, 999.99, 15.00, 'Gold'
+1002, 202, 'Bob Wilson', '2024-01-16', 'Clothing', 3, 29.99, 8.50, 'Bronze'
+1003, 201, 'Alice Johnson', '2024-01-20', 'Books', 2, 24.99, 5.00, 'Gold'
+                        </div>
+
+                        <p><strong>Question:</strong> Calculate total spending per customer and identify customers who should be upgraded to the next tier.</p>
+                        
+                        <div class="solution">
+                            <div class="solution-header" onclick="toggleSolution(this)">
+                                <span>Show Solution</span>
+                            </div>
+                            <div class="solution-content">
+                                <div class="sql-code">SELECT 
+    customer_id,
+    customer_name,
+    customer_tier,
+    COUNT(order_id) AS total_orders,
+    SUM(quantity * unit_price) AS total_product_spend,
+    SUM(shipping_cost) AS total_shipping_cost,
+    SUM(quantity * unit_price + shipping_cost) AS total_spend,
+    ROUND(AVG(quantity * unit_price), 2) AS avg_order_value,
+    MAX(order_date) AS last_order_date,
+    DATEDIFF(CURDATE(), MAX(order_date)) AS days_since_last_order,
+    CASE 
+        WHEN SUM(quantity * unit_price) >= 2000 AND customer_tier = 'Gold'
+            THEN 'Upgrade to Platinum'
+        WHEN SUM(quantity * unit_price) >= 1000 AND customer_tier = 'Silver'
+            THEN 'Upgrade to Gold'
+        WHEN SUM(quantity * unit_price) >= 500 AND customer_tier = 'Bronze'
+            THEN 'Upgrade to Silver'
+        ELSE 'Maintain Current Tier'
+    END AS tier_recommendation
+FROM 
+    customer_orders
+WHERE 
+    order_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)  -- Last 12 months
+GROUP BY 
+    customer_id, 
+    customer_name, 
+    customer_tier
+HAVING 
+    COUNT(order_id) >= 2  -- At least 2 orders
+ORDER BY 
+    total_spend DESC;</div>
+                                <div class="explanation">
+                                    <strong>Explanation:</strong> This query uses GROUP BY to aggregate customer data, calculating total spending and order patterns. The CASE statement provides tier upgrade recommendations based on spending thresholds. HAVING filters for customers with meaningful purchase history.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="intermediate" class="tab-content">
+                <h2 style="color: #667eea; margin-bottom: 20px;">Intermediate Level (Weeks 3-4)</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 50%"></div>
+                </div>
+
+                <div class="scenario">
+                    <div class="scenario-header" onclick="toggleScenario(this)">
+                        <span class="scenario-title">Economic Indicators Analysis</span>
+                        <div>
+                            <span class="difficulty medium">Medium</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                    </div>
+                    <div class="scenario-content">
+                        <div class="problem-statement">
+                            <strong>Scenario:</strong> An economic research firm needs to analyze GDP, unemployment, and inflation data across different countries to identify economic trends and correlations.
+                        </div>
+                        
+                        <div class="schema">
+<strong>Tables:</strong>
+
+countries:
+country_id (INT, PRIMARY KEY)
+country_name (VARCHAR)
+region (VARCHAR)
+population (BIGINT)
+gdp_per_capita_2023 (DECIMAL)
+
+economic_indicators:
+indicator_id (INT, PRIMARY KEY)
+country_id (INT, FOREIGN KEY)
+year (INT)
+quarter (INT)
+gdp_growth_rate (DECIMAL)  -- percentage
+unemployment_rate (DECIMAL)  -- percentage
+inflation_rate (DECIMAL)  -- percentage
+interest_rate (DECIMAL)  -- percentage
+
+trade_data:
+trade_id (INT, PRIMARY KEY)
+country_id (INT, FOREIGN KEY)
+year (INT)
+exports_usd (BIGINT)
+imports_usd (BIGINT)
+trade_partner_country (VARCHAR)
+                        </div>
+
+                        <p><strong>Question:</strong> Create a comprehensive economic dashboard showing GDP growth, unemployment trends, and trade balance for 2023.</p>
+                        
+                        <div class="solution">
+                            <div class="solution-header" onclick="toggleSolution(this)">
+                                <span>Show Solution</span>
+                            </div>
+                            <div class="solution-content">
+                                <div class="sql-code">SELECT 
+    c.country_name,
+    c.region,
+    c.population,
+    c.gdp_per_capita_2023,
+    
+    -- Economic indicators aggregated for 2023
+    ROUND(AVG(ei.gdp_growth_rate), 2) AS avg_gdp_growth_2023,
+    ROUND(AVG(ei.unemployment_rate), 2) AS avg_unemployment_2023,
+    ROUND(AVG(ei.inflation_rate), 2) AS avg_inflation_2023,
+    ROUND(AVG(ei.interest_rate), 2) AS avg_interest_rate_2023,
+    
+    -- Trade analysis
+    SUM(td.exports_usd) AS total_exports_2023,
+    SUM(td.imports_usd) AS total_imports_2023,
+    (SUM(td.exports_usd) - SUM(td.imports_usd)) AS trade_balance_2023,
+    
+    -- Calculated ratios and indicators
+    CASE 
+        WHEN SUM(td.imports_usd) > 0 THEN 
+            ROUND((SUM(td.exports_usd) * 100.0 / SUM(td.imports_usd)), 2)
+        ELSE NULL 
+    END AS export_import_ratio,
+    
+    -- Economic health assessment
+    CASE 
+        WHEN AVG(ei.gdp_growth_rate) > 3 AND AVG(ei.unemployment_rate) < 5 
+            THEN 'Strong Economy'
+        WHEN AVG(ei.gdp_growth_rate) > 1 AND AVG(ei.unemployment_rate) < 8 
+            THEN 'Moderate Growth'
+        WHEN AVG(ei.gdp_growth_rate) < 0 
+            THEN 'Recession Risk'
+        ELSE 'Stable Economy'
+    END AS economic_assessment,
+    
+    -- Trade dependency
+    CASE 
+        WHEN (SUM(td.exports_usd) + SUM(td.imports_usd)) > 
+             (c.gdp_per_capita_2023 * c.population * 0.5) 
+            THEN 'Trade Dependent'
+        ELSE 'Domestic Focused'
+    END AS trade_profile
+
+FROM 
+    countries c
+    LEFT JOIN economic_indicators ei ON c.country_id = ei.country_id 
+        AND ei.year = 2023
+    LEFT JOIN trade_data td ON c.country_id = td.country_id 
+        AND td.year = 2023
+
+GROUP BY 
+    c.country_id, 
+    c.country_name, 
+    c.region, 
+    c.population, 
+    c.gdp_per_capita_2023
+
+HAVING 
+    AVG(ei.gdp_growth_rate) IS NOT NULL  -- Only countries with economic data
+
+ORDER BY 
+    avg_gdp_growth_2023 DESC, 
+    c.gdp_per_capita_2023 DESC;</div>
+                                <div class="explanation">
+                                    <strong>Explanation:</strong> This query demonstrates intermediate JOIN operations, aggregation functions, and complex business logic. It combines multiple economic datasets to create meaningful insights, using CASE statements for categorization and calculated fields for economic ratios.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scenario">
+                    <div class="scenario-header" onclick="toggleScenario(this)">
+                        <span class="scenario-title">Healthcare Treatment Outcomes</span>
+                        <div>
+                            <span class="difficulty medium">Medium</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                    </div>
+                    <div class="scenario-content">
+                        <div class="problem-statement">
+                            <strong>Scenario:</strong> A medical research center wants to analyze treatment effectiveness across different demographics and identify factors that influence patient outcomes and readmission rates.
+                        </div>
+                        
+                        <div class="schema">
+<strong>Tables:</strong>
+
+patients:
+patient_id (INT, PRIMARY KEY)
+age_group (VARCHAR)  -- '18-30', '31-50', '51-70', '70+'
+gender (VARCHAR)
+race_ethnicity (VARCHAR)
+insurance_type (VARCHAR)
+chronic_conditions_count (INT)
+
+treatments:
+treatment_id (INT, PRIMARY KEY)
+patient_id (INT, FOREIGN KEY)
+treatment_date (DATE)
+procedure_code (VARCHAR)
+procedure_name (VARCHAR)
+treating_physician_id (INT)
+treatment_cost (DECIMAL)
+length_of_stay (INT)
+
+outcomes:
+outcome_id (INT, PRIMARY KEY)
+treatment_id (INT, FOREIGN KEY)
+discharge_status (VARCHAR)  -- 'Improved', 'Unchanged', 'Worsened'
+readmission_30day (BOOLEAN)
+patient_satisfaction_score (INT)  -- 1-10 scale
+complications (BOOLEAN)
+                        </div>
+
+                        <p><strong>Question:</strong> Analyze treatment outcomes by demographic groups and identify factors associated with readmissions.</p>
+                        
+                        <div class="solution">
+                            <div class="solution-header" onclick="toggleSolution(this)">
+                                <span>Show Solution</span>
+                            </div>
+                            <div class="solution-content">
+                                <div class="sql-code">SELECT 
+    p.age_group,
+    p.gender,
+    p.insurance_type,
+    
+    -- Treatment volume and costs
+    COUNT(DISTINCT t.treatment_id) AS total_treatments,
+    COUNT(DISTINCT p.patient_id) AS unique_patients,
+    ROUND(AVG(t.treatment_cost), 2) AS avg_treatment_cost,
+    ROUND(AVG(t.length_of_stay), 1) AS avg_length_of_stay,
+    
+    -- Outcome metrics
+    COUNT(CASE WHEN o.discharge_status = 'Improved' THEN 1 END) AS improved_outcomes,
+    ROUND(COUNT(CASE WHEN o.discharge_status = 'Improved' THEN 1 END) * 100.0 
+        / COUNT(o.outcome_id), 2) AS improvement_rate,
+    
+    -- Readmission analysis
+    COUNT(CASE WHEN o.readmission_30day = TRUE THEN 1 END) AS readmissions_30day,
+    ROUND(COUNT(CASE WHEN o.readmission_30day = TRUE THEN 1 END) * 100.0 
+        / COUNT(o.outcome_id), 2) AS readmission_rate,
+    
+    -- Complication rates
+    COUNT(CASE WHEN o.complications = TRUE THEN 1 END) AS total_complications,
+    ROUND(COUNT(CASE WHEN o.complications = TRUE THEN 1 END) * 100.0 
+        / COUNT(o.outcome_id), 2) AS complication_rate,
+    
+    -- Patient satisfaction
+    ROUND(AVG(o.patient_satisfaction_score), 1) AS avg_satisfaction_score,
+    ROUND(COUNT(CASE WHEN o.patient_satisfaction_score >= 8 THEN 1 END) * 100.0 
+        / COUNT(CASE WHEN o.patient_satisfaction_score IS NOT NULL THEN 1 END), 2) 
+        AS high_satisfaction_rate,
+    
+    -- Risk factors
+    ROUND(AVG(p.chronic_conditions_count), 1) AS avg_chronic_conditions,
+    
+    -- Quality indicators
+    CASE 
+        WHEN COUNT(CASE WHEN o.readmission_30day = TRUE THEN 1 END) * 100.0 
+             / COUNT(o.outcome_id) < 10 
+             AND COUNT(CASE WHEN o.complications = TRUE THEN 1 END) * 100.0 
+             / COUNT(o.outcome_id) < 5 
+            THEN 'High Quality'
+        WHEN COUNT(CASE WHEN o.readmission_30day = TRUE THEN 1 END) * 100.0 
+             / COUNT(o.outcome_id) < 15 
+            THEN 'Good Quality'
+        ELSE 'Needs Improvement'
+    END AS quality_rating
+
+FROM 
+    patients p
+    INNER JOIN treatments t ON p.patient_id = t.patient_id
+    INNER JOIN outcomes o ON t.treatment_id = o.treatment_id
+
+WHERE 
+    t.treatment_date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)  -- Last 12 months
+
+GROUP BY 
+    p.age_group, 
+    p.gender, 
+    p.insurance_type
+
+HAVING 
+    COUNT(DISTINCT t.treatment_id) >= 10  -- Sufficient sample size
+
+ORDER BY 
+    readmission_rate ASC, 
+    improvement_rate DESC;

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Expert Study Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .study-plan {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .scenario {
+            background: #f8f9ff;
+            border-left: 5px solid #667eea;
+            margin: 25px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .scenario-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .scenario-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .difficulty {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .scenario-content {
+            padding: 25px;
+            display: none;
+        }
+
+        .scenario-content.active {
+            display: block;
+        }
+
+        .problem-statement {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .schema {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-line;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .solution {
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .solution-header {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+        }
+
+        .solution-content {
+            padding: 20px;
+            display: none;
+        }
+
+        .solution-content.active {
+            display: block;
+        }
+
+        .sql-code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.4;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre;
+        }
+
+        .explanation {
+            background: #fff9c4;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-icon.rotated {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function toggleScenario(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.toggle-icon');
+            
+            content.classList.toggle('active');
+            icon.classList.toggle('rotated');
+        }
+
+        function toggleSolution(element) {
+            const content = element.nextElementSibling;
+            const isActive = content.classList.contains('active');
+            
+            content.classList.toggle('active');
+            element.innerHTML = isActive ? 'Show Solution' : 'Hide Solution';
+        }
+    </script>
+
+    <div class="container">
+        <div class="header">
+            <h1>SQL Expert Level</h1>
+            <p>Recursive CTEs, Complex Analytics & Optimization</p>
+        </div>
+
+        <div class="study-plan">
+            <h2 style="color: #667eea; margin-bottom: 30px;">Expert SQL Scenarios</h2>
+
+            <div class="scenario">
+                <div class="scenario-header" onclick="toggleScenario(this)">
+                    <span class="scenario-title">Algorithmic Trading Performance Analysis</span>
+                    <div>
+                        <span class="difficulty">Expert</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                </div>
+                <div class="scenario-content">
+                    <div class="problem-statement">
+                        <strong>Scenario:</strong> Analyze trading algorithms with complex drawdown calculations, multiple risk-adjusted ratios, and performance attribution.
+                    </div>
+                    
+                    <div class="schema">
+<strong>Tables:</strong>
+
+trading_strategies: strategy_id, strategy_name, algorithm_type, initial_capital
+daily_pnl: strategy_id, trade_date, net_pnl, market_exposure
+risk_metrics: strategy_id, date, var_95, beta_to_market
+                    </div>
+
+                    <p><strong>Question:</strong> Calculate Sharpe, Calmar, Sortino ratios with drawdown analysis and performance rankings.</p>
+                    
+                    <div class="solution">
+                        <div class="solution-header" onclick="toggleSolution(this)">
+                            Show Solution
+                        </div>
+                        <div class="solution-content">
+                            <div class="sql-code">WITH strategy_performance AS (
+    SELECT 
+        ts.strategy_id, ts.strategy_name, ts.algorithm_type, ts.initial_capital,
+        COUNT(dp.trade_date) AS trading_days,
+        SUM(dp.net_pnl) AS total_net_pnl,
+        STDDEV(dp.net_pnl) AS daily_volatility,
+        SUM(dp.net_pnl) / ts.initial_capital AS total_return,
+        STDDEV(dp.net_pnl / ts.initial_capital) * SQRT(252) AS annualized_volatility,
+        (AVG(dp.net_pnl / ts.initial_capital) * 252 - 0.02) / 
+        NULLIF(STDDEV(dp.net_pnl / ts.initial_capital) * SQRT(252), 0) AS sharpe_ratio,
+        COUNT(CASE WHEN dp.net_pnl > 0 THEN 1 END) * 100.0 / COUNT(dp.net_pnl) AS win_rate,
+        MIN(dp.net_pnl) AS worst_daily_loss,
+        MAX(dp.net_pnl) AS best_daily_gain
+    FROM trading_strategies ts
+        INNER JOIN daily_pnl dp ON ts.strategy_id = dp.strategy_id
+    WHERE dp.trade_date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+    GROUP BY ts.strategy_id, ts.strategy_name, ts.algorithm_type, ts.initial_capital
+),
+drawdown_calculation AS (
+    SELECT 
+        dp.strategy_id, dp.trade_date, dp.net_pnl,
+        SUM(dp.net_pnl) OVER (
+            PARTITION BY dp.strategy_id 
+            ORDER BY dp.trade_date
+            ROWS UNBOUNDED PRECEDING
+        ) AS cumulative_pnl,
+        MAX(SUM(dp.net_pnl) OVER (
+            PARTITION BY dp.strategy_id 
+            ORDER BY dp.trade_date
+            ROWS UNBOUNDED PRECEDING
+        )) OVER (
+            PARTITION BY dp.strategy_id 
+            ORDER BY dp.trade_date
+            ROWS UNBOUNDED PRECEDING
+        ) AS running_max
+    FROM daily_pnl dp
+    WHERE dp.trade_date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+),
+drawdown_metrics AS (
+    SELECT 
+        strategy_id,
+        MIN(cumulative_pnl - running_max) AS max_drawdown,
+        FIRST_VALUE(cumulative_pnl - running_max) OVER (
+            PARTITION BY strategy_id 
+            ORDER BY trade_date DESC
+        ) AS current_drawdown
+    FROM drawdown_calculation
+    GROUP BY strategy_id
+),
+advanced_metrics AS (
+    SELECT 
+        sp.*,
+        dm.max_drawdown,
+        dm.current_drawdown,
+        CASE 
+            WHEN ABS(dm.max_drawdown) > 0 THEN 
+                (sp.total_return * sp.initial_capital / 252 * sp.trading_days) / ABS(dm.max_drawdown)
+            ELSE NULL 
+        END AS calmar_ratio,
+        (sp.total_return * sp.initial_capital / 252 * sp.trading_days) / NULLIF(
+            SQRT(252 * (SELECT AVG(CASE WHEN dp.net_pnl < 0 THEN POWER(dp.net_pnl, 2) ELSE 0 END)
+                        FROM daily_pnl dp WHERE dp.strategy_id = sp.strategy_id)), 0
+        ) AS sortino_ratio,
+        AVG(rm.var_95) AS avg_daily_var_95,
+        AVG(rm.beta_to_market) AS avg_beta
+    FROM strategy_performance sp
+    LEFT JOIN drawdown_metrics dm ON sp.strategy_id = dm.strategy_id
+    LEFT JOIN risk_metrics rm ON sp.strategy_id = rm.strategy_id
+    GROUP BY sp.strategy_id, sp.strategy_name, sp.algorithm_type, sp.initial_capital,
+             sp.trading_days, sp.total_net_pnl, sp.daily_volatility, sp.total_return,
+             sp.annualized_volatility, sp.sharpe_ratio, sp.win_rate,
+             sp.worst_daily_loss, sp.best_daily_gain, dm.max_drawdown, dm.current_drawdown
+)
+SELECT 
+    strategy_name,
+    algorithm_type,
+    FORMAT(total_net_pnl, 2) AS total_pnl,
+    ROUND(sharpe_ratio, 3) AS sharpe_ratio,
+    ROUND(calmar_ratio, 3) AS calmar_ratio,
+    ROUND(sortino_ratio, 3) AS sortino_ratio,
+    CONCAT(ROUND(win_rate, 1), '%') AS win_rate_pct,
+    CONCAT(ROUND(max_drawdown / total_net_pnl * 100, 2), '%') AS max_drawdown_pct,
+    ROUND(avg_beta, 3) AS beta_to_market,
+    RANK() OVER (ORDER BY sharpe_ratio DESC) AS sharpe_rank,
+    RANK() OVER (ORDER BY calmar_ratio DESC) AS calmar_rank,
+    CASE 
+        WHEN sharpe_ratio > 2.0 AND calmar_ratio > 1.5 THEN 'Exceptional'
+        WHEN sharpe_ratio > 1.5 AND calmar_ratio > 1.0 THEN 'Strong'
+        WHEN sharpe_ratio > 1.0 THEN 'Good'
+        ELSE 'Underperforming'
+    END AS performance_grade
+FROM advanced_metrics
+ORDER BY sharpe_ratio DESC;</div>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Expert-level quantitative finance analysis with complex drawdown calculations, multiple risk-adjusted ratios (Sharpe, Calmar, Sortino), and sophisticated performance attribution using advanced window functions.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scenario">
+                <div class="scenario-header" onclick="toggleScenario(this)">
+                    <span class="scenario-title">Supply Chain Network Optimization</span>
+                    <div>
+                        <span class="difficulty">Expert</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                </div>
+                <div class="scenario-content">
+                    <div class="problem-statement">
+                        <strong>Scenario:</strong> Optimize multi-tier supplier networks using recursive analysis, risk propagation, and resilience scoring.
+                    </div>
+                    
+                    <div class="schema">
+<strong>Tables:</strong>
+
+suppliers: supplier_id, supplier_name, parent_supplier_id, country, reliability_score
+supply_transactions: supplier_id, transaction_date, quantity, unit_cost, lead_time_days
+disruption_events: supplier_id, event_date, event_type, severity_level
+                    </div>
+
+                    <p><strong>Question:</strong> Build supplier hierarchy with risk propagation and optimization recommendations.</p>
+                    
+                    <div class="solution">
+                        <div class="solution-header" onclick="toggleSolution(this)">
+                            Show Solution
+                        </div>
+                        <div class="solution-content">
+                            <div class="sql-code">WITH RECURSIVE supplier_hierarchy AS (
+    -- Base case: Root suppliers
+    SELECT 
+        supplier_id, supplier_name, parent_supplier_id, country, reliability_score,
+        1 AS depth_level,
+        CAST(supplier_name AS CHAR(1000)) AS supply_chain_path,
+        supplier_id AS root_supplier_id,
+        1.0 AS risk_multiplier
+    FROM suppliers 
+    WHERE parent_supplier_id IS NULL
+    
+    UNION ALL
+    
+    -- Recursive case: Child suppliers
+    SELECT 
+        s.supplier_id, s.supplier_name, s.parent_supplier_id, s.country, s.reliability_score,
+        sh.depth_level + 1,
+        CONCAT(sh.supply_chain_path, ' -> ', s.supplier_name),
+        sh.root_supplier_id,
+        sh.risk_multiplier * (1 + (1 - s.reliability_score) * 0.5)
+    FROM suppliers s
+        INNER JOIN supplier_hierarchy sh ON s.parent_supplier_id = sh.supplier_id
+    WHERE sh.depth_level < 5
+),
+supplier_performance AS (
+    SELECT 
+        sh.supplier_id, sh.supplier_name, sh.depth_level, sh.supply_chain_path,
+        sh.country, sh.reliability_score, sh.risk_multiplier,
+        COUNT(st.transaction_id) AS total_transactions,
+        AVG(st.lead_time_days) AS avg_lead_time,
+        STDDEV(st.lead_time_days) AS lead_time_variability,
+        SUM(st.quantity * st.unit_cost) AS total_annual_spend,
+        COUNT(de.event_id) AS disruption_events_count,
+        AVG(de.severity_level) AS avg_disruption_severity,
+        COUNT(CASE WHEN st.lead_time_days > AVG(st.lead_time_days) * 1.5 THEN 1 END) AS delayed_deliveries
+    FROM supplier_hierarchy sh
+        LEFT JOIN supply_transactions st ON sh.supplier_id = st.supplier_id
+            AND st.transaction_date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+        LEFT JOIN disruption_events de ON sh.supplier_id = de.supplier_id
+            AND de.event_date >= DATE_SUB(CURDATE(), INTERVAL 2 YEAR)
+    GROUP BY sh.supplier_id, sh.supplier_name, sh.depth_level, sh.supply_chain_path,
+             sh.country, sh.reliability_score, sh.risk_multiplier
+),
+risk_assessment AS (
+    SELECT 
+        sp.*,
+        CASE 
+            WHEN sp.reliability_score < 0.6 OR sp.disruption_events_count > 3 THEN 'Critical Risk'
+            WHEN sp.reliability_score < 0.8 OR sp.disruption_events_count > 1 THEN 'High Risk'
+            WHEN sp.reliability_score < 0.9 THEN 'Medium Risk'
+            ELSE 'Low Risk'
+        END AS supplier_risk_level,
+        CASE 
+            WHEN sp.avg_lead_time > 45 THEN 'Critical Path Bottleneck'
+            WHEN sp.total_annual_spend > 500000 THEN 'Strategic Supplier'
+            ELSE 'Standard Supplier'
+        END AS supplier_classification,
+        (100 - 
+         (CASE WHEN sp.reliability_score < 0.6 THEN 40 WHEN sp.reliability_score < 0.8 THEN 25 ELSE 0 END) -
+         (sp.disruption_events_count * 5) -
+         (CASE WHEN sp.country IN ('China', 'India') THEN 15 ELSE 0 END)
+        ) AS resilience_score
+    FROM supplier_performance sp
+)
+SELECT 
+    CONCAT(REPEAT('  ', depth_level - 1), supplier_name) AS indented_supplier_name,
+    country,
+    supply_chain_path,
+    total_transactions,
+    ROUND(avg_lead_time, 1) AS avg_lead_time_days,
+    FORMAT(total_annual_spend, 2) AS annual_spend,
+    supplier_risk_level,
+    supplier_classification,
+    ROUND(risk_multiplier, 2) AS compound_risk_multiplier,
+    disruption_events_count,
+    resilience_score,
+    CASE 
+        WHEN supplier_risk_level = 'Critical Risk' AND total_annual_spend > 100000 
+            THEN 'URGENT: Find Alternative'
+        WHEN supplier_classification = 'Critical Path Bottleneck' 
+            THEN 'PRIORITY: Optimize Lead Time'
+        WHEN resilience_score < 70 
+            THEN 'ACTION: Improve Resilience'
+        WHEN resilience_score > 85 
+            THEN 'LEVERAGE: Increase Partnership'
+        ELSE 'MONITOR: Current Strategy'
+    END AS optimization_recommendation,
+    LEAST(100, GREATEST(1, 
+        (CASE WHEN supplier_risk_level = 'Critical Risk' THEN 30 ELSE 10 END) +
+        (CASE WHEN supplier_classification = 'Critical Path Bottleneck' THEN 20 ELSE 5 END) +
+        (disruption_events_count * 5) +
+        (CASE WHEN total_annual_spend > 1000000 THEN 10 ELSE 2 END)
+    )) AS priority_score
+FROM risk_assessment
+ORDER BY depth_level, priority_score DESC;</div>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Expert-level recursive CTE analysis for supply chain optimization with hierarchical risk propagation, multi-dimensional scoring algorithms, and actionable business recommendations.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

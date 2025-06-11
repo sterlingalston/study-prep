@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Advanced Study Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .study-plan {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .scenario {
+            background: #f8f9ff;
+            border-left: 5px solid #667eea;
+            margin: 25px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .scenario-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .scenario-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .difficulty {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .scenario-content {
+            padding: 25px;
+            display: none;
+        }
+
+        .scenario-content.active {
+            display: block;
+        }
+
+        .problem-statement {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .schema {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-line;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .solution {
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .solution-header {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+        }
+
+        .solution-content {
+            padding: 20px;
+            display: none;
+        }
+
+        .solution-content.active {
+            display: block;
+        }
+
+        .sql-code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre;
+        }
+
+        .explanation {
+            background: #fff9c4;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-icon.rotated {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function toggleScenario(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.toggle-icon');
+            
+            content.classList.toggle('active');
+            icon.classList.toggle('rotated');
+        }
+
+        function toggleSolution(element) {
+            const content = element.nextElementSibling;
+            const isActive = content.classList.contains('active');
+            
+            content.classList.toggle('active');
+            element.innerHTML = isActive ? 'Show Solution' : 'Hide Solution';
+        }
+    </script>
+
+    <div class="container">
+        <div class="header">
+            <h1>SQL Advanced Level</h1>
+            <p>Complex Analytics, Window Functions & CTEs</p>
+        </div>
+
+        <div class="study-plan">
+            <h2 style="color: #667eea; margin-bottom: 30px;">Advanced SQL Scenarios</h2>
+
+            <div class="scenario">
+                <div class="scenario-header" onclick="toggleScenario(this)">
+                    <span class="scenario-title">Portfolio Risk Management & VaR Calculation</span>
+                    <div>
+                        <span class="difficulty">Hard</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                </div>
+                <div class="scenario-content">
+                    <div class="problem-statement">
+                        <strong>Scenario:</strong> Calculate Value at Risk (VaR), Sharpe ratio, and portfolio risk metrics using advanced statistical methods.
+                    </div>
+                    
+                    <div class="schema">
+<strong>Tables:</strong>
+
+portfolios:
+portfolio_id, portfolio_name, portfolio_type, total_value
+
+daily_returns:
+portfolio_id, date, daily_return, market_return, risk_free_rate
+
+asset_allocations:
+portfolio_id, asset_class, allocation_percentage, current_value
+                    </div>
+
+                    <p><strong>Question:</strong> Calculate 95% VaR, Sharpe ratio, and portfolio rankings.</p>
+                    
+                    <div class="solution">
+                        <div class="solution-header" onclick="toggleSolution(this)">
+                            Show Solution
+                        </div>
+                        <div class="solution-content">
+                            <div class="sql-code">WITH portfolio_stats AS (
+    SELECT 
+        p.portfolio_id,
+        p.portfolio_name,
+        p.portfolio_type,
+        p.total_value,
+        
+        -- Basic statistics
+        COUNT(dr.daily_return) AS trading_days,
+        ROUND(AVG(dr.daily_return), 4) AS avg_daily_return,
+        ROUND(STDDEV(dr.daily_return), 4) AS daily_volatility,
+        
+        -- Annualized metrics
+        ROUND(AVG(dr.daily_return) * 252, 4) AS annualized_return,
+        ROUND(STDDEV(dr.daily_return) * SQRT(252), 4) AS annualized_volatility,
+        
+        -- Risk metrics
+        ROUND(AVG(dr.daily_return - dr.risk_free_rate), 4) AS avg_excess_return,
+        PERCENTILE_CONT(0.05) WITHIN GROUP (ORDER BY dr.daily_return) AS var_95_daily
+        
+    FROM portfolios p
+        INNER JOIN daily_returns dr ON p.portfolio_id = dr.portfolio_id
+    WHERE dr.date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+    GROUP BY p.portfolio_id, p.portfolio_name, p.portfolio_type, p.total_value
+),
+risk_metrics AS (
+    SELECT 
+        ps.*,
+        
+        -- Sharpe Ratio
+        CASE 
+            WHEN ps.daily_volatility > 0 THEN 
+                ROUND(ps.avg_excess_return / ps.daily_volatility * SQRT(252), 4)
+            ELSE NULL 
+        END AS sharpe_ratio,
+        
+        -- VaR in dollar terms
+        ROUND(ps.var_95_daily * ps.total_value, 2) AS var_95_dollar,
+        
+        -- Risk categories
+        CASE 
+            WHEN ps.annualized_volatility <= 0.10 THEN 'Low Risk'
+            WHEN ps.annualized_volatility <= 0.20 THEN 'Medium Risk'
+            ELSE 'High Risk'
+        END AS risk_category
+        
+    FROM portfolio_stats ps
+)
+SELECT 
+    portfolio_name,
+    portfolio_type,
+    FORMAT(total_value, 2) AS portfolio_value,
+    
+    -- Return metrics
+    CONCAT(ROUND(annualized_return * 100, 2), '%') AS annualized_return_pct,
+    CONCAT(ROUND(annualized_volatility * 100, 2), '%') AS volatility_pct,
+    sharpe_ratio,
+    
+    -- Risk metrics
+    CONCAT(ROUND(var_95_daily * 100, 2), '%') AS daily_var_95_pct,
+    FORMAT(ABS(var_95_dollar), 2) AS daily_var_95_dollar,
+    risk_category,
+    
+    -- Rankings
+    RANK() OVER (ORDER BY sharpe_ratio DESC) AS sharpe_rank,
+    RANK() OVER (ORDER BY annualized_return DESC) AS return_rank
+    
+FROM risk_metrics
+ORDER BY sharpe_ratio DESC;</div>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Uses window functions, percentiles, and statistical calculations for financial risk analysis. Demonstrates VaR calculation, Sharpe ratio, and portfolio ranking techniques.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scenario">
+                <div class="scenario-header" onclick="toggleScenario(this)">
+                    <span class="scenario-title">Healthcare Epidemiological Analysis</span>
+                    <div>
+                        <span class="difficulty">Hard</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                </div>
+                <div class="scenario-content">
+                    <div class="problem-statement">
+                        <strong>Scenario:</strong> Track disease outbreaks, calculate infection rates, and analyze intervention effectiveness.
+                    </div>
+                    
+                    <div class="schema">
+<strong>Tables:</strong>
+
+population_demographics:
+region_id, region_name, population_size, population_density
+
+disease_cases:
+region_id, case_date, disease_type, severity_level, hospitalized, outcome
+
+interventions:
+region_id, intervention_type, start_date, end_date, coverage_percentage
+                    </div>
+
+                    <p><strong>Question:</strong> Calculate transmission rates, intervention effectiveness, and outbreak patterns.</p>
+                    
+                    <div class="solution">
+                        <div class="solution-header" onclick="toggleSolution(this)">
+                            Show Solution
+                        </div>
+                        <div class="solution-content">
+                            <div class="sql-code">WITH epidemic_timeline AS (
+    SELECT 
+        pd.region_name,
+        pd.population_size,
+        dc.case_date,
+        dc.disease_type,
+        
+        -- Daily metrics
+        COUNT(dc.case_id) AS daily_cases,
+        COUNT(CASE WHEN dc.hospitalized = TRUE THEN 1 END) AS daily_hospitalizations,
+        COUNT(CASE WHEN dc.outcome = 'Deceased' THEN 1 END) AS daily_deaths,
+        
+        -- Cumulative cases
+        SUM(COUNT(dc.case_id)) OVER (
+            PARTITION BY pd.region_id, dc.disease_type 
+            ORDER BY dc.case_date 
+            ROWS UNBOUNDED PRECEDING
+        ) AS cumulative_cases,
+        
+        -- Attack rate (per 100k population)
+        SUM(COUNT(dc.case_id)) OVER (
+            PARTITION BY pd.region_id, dc.disease_type 
+            ORDER BY dc.case_date 
+            ROWS UNBOUNDED PRECEDING
+        ) * 100000.0 / pd.population_size AS attack_rate_per_100k,
+        
+        -- 7-day moving average
+        AVG(COUNT(dc.case_id)) OVER (
+            PARTITION BY pd.region_id, dc.disease_type 
+            ORDER BY dc.case_date 
+            ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+        ) AS seven_day_avg_cases,
+        
+        -- Reproduction rate estimate
+        AVG(COUNT(dc.case_id)) OVER (
+            PARTITION BY pd.region_id, dc.disease_type 
+            ORDER BY dc.case_date 
+            ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+        ) / NULLIF(AVG(COUNT(dc.case_id)) OVER (
+            PARTITION BY pd.region_id, dc.disease_type 
+            ORDER BY dc.case_date 
+            ROWS BETWEEN 13 PRECEDING AND 7 PRECEDING
+        ), 0) AS reproduction_rate
+
+    FROM population_demographics pd
+        INNER JOIN disease_cases dc ON pd.region_id = dc.region_id
+    GROUP BY pd.region_id, pd.region_name, pd.population_size, dc.case_date, dc.disease_type
+),
+intervention_analysis AS (
+    SELECT 
+        et.*,
+        
+        -- Intervention status
+        CASE 
+            WHEN EXISTS (
+                SELECT 1 FROM interventions i 
+                WHERE i.region_id = et.region_id 
+                AND et.case_date BETWEEN i.start_date AND COALESCE(i.end_date, CURDATE())
+            ) THEN 'Active Intervention'
+            ELSE 'No Intervention'
+        END AS intervention_status,
+        
+        -- Pre/post comparison
+        LAG(et.seven_day_avg_cases, 14) OVER (
+            PARTITION BY et.region_name, et.disease_type 
+            ORDER BY et.case_date
+        ) AS cases_2weeks_ago,
+        
+        -- Epidemic phase
+        CASE 
+            WHEN et.reproduction_rate > 1.5 THEN 'Exponential Growth'
+            WHEN et.reproduction_rate > 1.1 THEN 'Linear Growth'
+            WHEN et.reproduction_rate BETWEEN 0.9 AND 1.1 THEN 'Plateau'
+            WHEN et.reproduction_rate > 0.5 THEN 'Decline'
+            ELSE 'Controlled'
+        END AS epidemic_phase
+
+    FROM epidemic_timeline et
+)
+SELECT 
+    region_name,
+    disease_type,
+    case_date,
+    daily_cases,
+    ROUND(seven_day_avg_cases, 1) AS seven_day_avg,
+    cumulative_cases,
+    ROUND(attack_rate_per_100k, 2) AS attack_rate_per_100k,
+    ROUND(reproduction_rate, 2) AS reproduction_rate,
+    epidemic_phase,
+    intervention_status,
+    
+    -- Intervention effectiveness
+    CASE 
+        WHEN cases_2weeks_ago IS NOT NULL 
+             AND seven_day_avg_cases < cases_2weeks_ago * 0.7 
+             AND intervention_status = 'Active Intervention'
+            THEN 'Effective'
+        WHEN cases_2weeks_ago IS NOT NULL 
+             AND seven_day_avg_cases > cases_2weeks_ago * 1.2 
+             AND intervention_status = 'Active Intervention'
+            THEN 'Ineffective'
+        ELSE 'Monitoring'
+    END AS intervention_effectiveness,
+    
+    -- Alert level
+    CASE 
+        WHEN attack_rate_per_100k > 500 AND reproduction_rate > 1.2 THEN 'Critical'
+        WHEN attack_rate_per_100k > 200 AND reproduction_rate > 1.0 THEN 'High'
+        WHEN attack_rate_per_100k > 50 THEN 'Monitor'
+        ELSE 'Normal'
+    END AS alert_level
+
+FROM intervention_analysis
+WHERE case_date >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)
+ORDER BY region_name, disease_type, case_date DESC;</div>
+                            <div class="explanation">
+                                <strong>Explanation:</strong> Advanced epidemiological analysis using window functions for moving averages, cumulative calculations, LAG for trend analysis, and complex CASE logic for public health decision making.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
