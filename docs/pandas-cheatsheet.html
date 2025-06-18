@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pandas Cheatsheet</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; color: white; margin-bottom: 30px; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .cheatsheet { background: white; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); padding: 30px; }
+        .tabs { display: flex; gap: 5px; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; }
+        .tab { padding: 10px 20px; background: #f8f9fa; border: none; border-radius: 8px 8px 0 0; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+        .tab.active { background: #667eea; color: white; }
+        .content { display: none; }
+        .content.active { display: block; }
+        .section { margin-bottom: 25px; }
+        .section h3 { color: #667eea; font-size: 1.2rem; margin-bottom: 10px; border-bottom: 2px solid #667eea; padding-bottom: 3px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 15px; }
+        .block { background: #f8f9ff; border-left: 4px solid #667eea; border-radius: 6px; padding: 12px; }
+        .block h4 { font-size: 0.9rem; margin-bottom: 6px; color: #333; }
+        .code { background: #1e1e1e; color: #d4d4d4; padding: 10px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 12px; white-space: pre; overflow-x: auto; }
+        .tip { background: #e7f3ff; border-radius: 6px; padding: 15px; margin: 15px 0; border-left: 4px solid #2196F3; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } .tabs { flex-wrap: wrap; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐼 Pandas Cheatsheet</h1>
+            <p>Essential Python Data Analysis Reference</p>
+        </div>
+
+        <div class="cheatsheet">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('basics')">Basics</button>
+                <button class="tab" onclick="showTab('dataframe')">DataFrame</button>
+                <button class="tab" onclick="showTab('manipulation')">Manipulation</button>
+                <button class="tab" onclick="showTab('analysis')">Analysis</button>
+                <button class="tab" onclick="showTab('advanced')">Advanced</button>
+            </div>
+
+            <div id="basics" class="content active">
+                <div class="tip">
+                    <strong>Quick Start:</strong> import pandas as pd | import numpy as np | pd.__version__
+                </div>
+
+                <div class="section">
+                    <h3>Creating Data</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>From Dictionary</h4>
+                            <div class="code">df = pd.DataFrame({'A': [1,2,3], 'B': [4,5,6]})</div>
+                        </div>
+                        <div class="block">
+                            <h4>Series Creation</h4>
+                            <div class="code">s = pd.Series([1,2,3], index=['a','b','c'])</div>
+                        </div>
+                        <div class="block">
+                            <h4>Date Range</h4>
+                            <div class="code">pd.date_range('2024-01-01', periods=10)</div>
+                        </div>
+                        <div class="block">
+                            <h4>Random Data</h4>
+                            <div class="code">pd.DataFrame(np.random.randn(5,3), columns=['A','B','C'])</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>I/O Operations</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>CSV</h4>
+                            <div class="code">pd.read_csv('file.csv')
+df.to_csv('out.csv', index=False)</div>
+                        </div>
+                        <div class="block">
+                            <h4>Excel</h4>
+                            <div class="code">pd.read_excel('file.xlsx', sheet_name='Sheet1')
+df.to_excel('out.xlsx')</div>
+                        </div>
+                        <div class="block">
+                            <h4>JSON</h4>
+                            <div class="code">pd.read_json('file.json')
+df.to_json('out.json')</div>
+                        </div>
+                        <div class="block">
+                            <h4>SQL</h4>
+                            <div class="code">pd.read_sql('SELECT * FROM table', conn)
+df.to_sql('table', conn)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Basic Info</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>Shape & Info</h4>
+                            <div class="code">df.shape  df.info()  df.describe()  df.dtypes</div>
+                        </div>
+                        <div class="block">
+                            <h4>Head/Tail</h4>
+                            <div class="code">df.head()  df.tail()  df.head(10)</div>
+                        </div>
+                        <div class="block">
+                            <h4>Columns</h4>
+                            <div class="code">df.columns  df.index  list(df)</div>
+                        </div>
+                        <div class="block">
+                            <h4>Memory</h4>
+                            <div class="code">df.memory_usage()  df.size  len(df)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dataframe" class="content">
+                <div class="section">
+                    <h3>Selecting Data</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>Columns</h4>
+                            <div class="code">df['col']  df[['A','B']]  df.col</div>
+                        </div>
+                        <div class="block">
+                            <h4>Rows</h4>
+                            <div class="code">df.loc[0]  df.iloc[0:3]  df.loc[0:2]</div>
+                        </div>
+                        <div class="block">
+                            <h4>Boolean</h4>
+                            <div class="code">df[df['A'] > 5]
+df[(df['A'] > 1) & (df['B'] < 5)]</div>
+                        </div>
+                        <div class="block">
+                            <h4>Query</h4>
+                            <div class="code">df.query('A > 1 and B < 5')
+df.loc[df['A'] > 1, ['B','C']]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Modifying Data</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>New Columns</h4>
+                            <div class="code">df['new'] = df['A'] + df['B']
+df.assign(new=df['A'] * 2)</div>
+                        </div>
+                        <div class="block">
+                            <h4>Conditional</h4>
+                            <div class="code">df['cat'] = np.where(df['A'] > 5, 'High', 'Low')
+df['grade'] = df['score'].apply(lambda x: 'A' if x >= 90 else 'B')</div>
+                        </div>
+                        <div class="block">
+                            <h4>Rename</h4>
+                            <div class="code">df.rename(columns={'old': 'new'})
+df.add_prefix('pre_')</div>
+                        </div>
+                        <div class="block">
+                            <h4>Drop</h4>
+                            <div class="code">df.drop('col', axis=1)
+df.drop_duplicates()</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Sorting</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>Sort Values</h4>
+                            <div class="code">df.sort_values('A')
+df.sort_values(['A','B'], ascending=False)</div>
+                        </div>
+                        <div class="block">
+                            <h4>Sort Index</h4>
+                            <div class="code">df.sort_index()
+df.sort_index(axis=1)</div>
+                        </div>
+                        <div class="block">
+                            <h4>Ranking</h4>
+                            <div class="code">df['rank'] = df['A'].rank()
+df['A'].rank(pct=True)</div>
+                        </div>
+                        <div class="block">
+                            <h4>Top/Bottom</h4>
+                            <div class="code">df.nlargest(5, 'A')
+df['A'].idxmax()</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="manipulation" class="content">
+                <div class="section">
+                    <h3>Missing Data</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>Detect</h4>
+                            <div class="code">df.isnull()  df.isnull().sum()</div>
+                        </div>
+                        <div class="block">
+                            <h4>Drop</h4>
+                            <div class="code">df.dropna()  df.dropna(axis=1)</div>
+                        </div>
+                        <div class="block">
+                            <h4>Fill</h4>
+                            <div class="code">df.fillna(0)  df.fillna(method='ffill')</div>
+                        </div>
+                        <div class="block">
+                            <h4>Interpolate</h4>
+                            <div class="code">df.interpolate()  df.interpolate(method='time')</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Combining Data</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>Merge</h4>
+                            <div class="code">pd.merge(df1, df2, on='key')
+pd.merge(df1, df2, how='left')</div>
+                        </div>
+                        <div class="block">
+                            <h4>Join</h4>
+                            <div class="code">df1.join(df2)
+df1.join(df2, how='outer')</div>
+                        </div>
+                        <div class="block">
+                            <h4>Concat</h4>
+                            <div class="code">pd.concat([df1, df2])
+pd.concat([df1, df2], axis=1)</div>
+                        </div>
+                        <div class="block">
+                            <h4>Append</h4>
+                            <div class="code">df1.append(df2)
+df1.append({'A': 1}, ignore_index=True)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Reshaping</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>Pivot</h4>
+                            <div class="code">df.pivot_table(values='D', index='A', columns='B')
+df.pivot(index='A', columns='B')</div>
+                        </div>
+                        <div class="block">
+                            <h4>Melt</h4>
+                            <div class="code">pd.melt(df, id_vars=['A'])
+df.melt(var_name='variable')</div>
+                        </div>
+                        <div class="block">
+                            <h4>Stack</h4>
+                            <div class="code">df.stack()  df.unstack()</div>
+                        </div>
+                        <div class="block">
+                            <h4>Transpose</h4>
+                            <div class="code">df.T  df.transpose()</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="analysis" class="content">
+                <div class="section">
+                    <h3>Statistics</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>Basic</h4>
+                            <div class="code">df.mean()  df.median()  df.std()  df.var()</div>
+                        </div>
+                        <div class="block">
+                            <h4>Aggregations</h4>
+                            <div class="code">df.sum()  df.min()  df.max()  df.count()</div>
+                        </div>
+                        <div class="block">
+                            <h4>Quantiles</h4>
+                            <div class="code">df.quantile(0.25)
+df.quantile([0.25, 0.5, 0.75])</div>
+                        </div>
+                        <div class="block">
+                            <h4>Correlation</h4>
+                            <div class="code">df.corr()  df.corrwith(df['A'])  df.cov()</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>GroupBy</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>Basic</h4>
+                            <div class="code">df.groupby('A').sum()
+df.groupby(['A','B']).mean()</div>
+                        </div>
+                        <div class="block">
+                            <h4>Aggregation</h4>
+                            <div class="code">df.groupby('A').agg({'B': 'sum', 'C': 'mean'})</div>
+                        </div>
+                        <div class="block">
+                            <h4>Transform</h4>
+                            <div class="code">df.groupby('A').transform('mean')
+df.groupby('A').size()</div>
+                        </div>
+                        <div class="block">
+                            <h4>Filter</h4>
+                            <div class="code">df.groupby('A').filter(lambda x: len(x) > 2)
+df.groupby('A').nth(0)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Time Series</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>Parsing</h4>
+                            <div class="code">pd.to_datetime(df['date'])
+df.set_index('date')</div>
+                        </div>
+                        <div class="block">
+                            <h4>Components</h4>
+                            <div class="code">df.index.year  df.index.month  df.index.dayofweek</div>
+                        </div>
+                        <div class="block">
+                            <h4>Resampling</h4>
+                            <div class="code">df.resample('D').mean()
+df.resample('M').sum()</div>
+                        </div>
+                        <div class="block">
+                            <h4>Rolling</h4>
+                            <div class="code">df.rolling(7).mean()
+df.expanding().mean()</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="advanced" class="content">
+                <div class="section">
+                    <h3>Advanced Operations</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>Apply</h4>
+                            <div class="code">df.apply(lambda x: x.max() - x.min())
+df['A'].apply(lambda x: x**2)</div>
+                        </div>
+                        <div class="block">
+                            <h4>Map</h4>
+                            <div class="code">df['A'].map({1: 'one', 2: 'two'})
+df.replace({'old': 'new'})</div>
+                        </div>
+                        <div class="block">
+                            <h4>Strings</h4>
+                            <div class="code">df['text'].str.upper()
+df['text'].str.contains('pattern')</div>
+                        </div>
+                        <div class="block">
+                            <h4>Categories</h4>
+                            <div class="code">df['A'].astype('category')
+df['cat'].cat.categories</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Performance</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>Data Types</h4>
+                            <div class="code">df.astype({'A': 'int32'})
+pd.to_numeric(df['A'], downcast='integer')</div>
+                        </div>
+                        <div class="block">
+                            <h4>Chunking</h4>
+                            <div class="code">for chunk in pd.read_csv('big.csv', chunksize=1000):
+    process(chunk)</div>
+                        </div>
+                        <div class="block">
+                            <h4>Index</h4>
+                            <div class="code">df.set_index('A')
+df.reset_index()</div>
+                        </div>
+                        <div class="block">
+                            <h4>Copy</h4>
+                            <div class="code">df.copy()  df.is_copy</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Plotting</h3>
+                    <div class="grid">
+                        <div class="block">
+                            <h4>Basic</h4>
+                            <div class="code">df.plot()  df.plot(kind='bar')  df.plot(kind='hist')</div>
+                        </div>
+                        <div class="block">
+                            <h4>Scatter</h4>
+                            <div class="code">df.plot(kind='scatter', x='A', y='B')
+pd.plotting.scatter_matrix(df)</div>
+                        </div>
+                        <div class="block">
+                            <h4>Styling</h4>
+                            <div class="code">df.plot(figsize=(10,6), title='Plot')</div>
+                        </div>
+                        <div class="block">
+                            <h4>Save</h4>
+                            <div class="code">import matplotlib.pyplot as plt
+plt.savefig('plot.png')</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip">
+                    <strong>Performance Tips:</strong> Use vectorized operations • Use .loc/.iloc • Convert to categories • Optimize dtypes • Process in chunks • Use .query() for complex filtering
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tab) {
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
